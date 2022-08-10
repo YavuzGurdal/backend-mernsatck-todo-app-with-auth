@@ -30,3 +30,31 @@ export const signup = asyncHandler(async (req, res, next) => {
         next(err)
     }
 })
+
+// @desc Authenticate a user
+// @route POST /api/auth/signin
+// @access Public
+export const signin = async (req, res, next) => {
+    try {
+        const { email } = req.body
+
+        if (!email || !req.body.password) return next(createError(400, 'Please add all fields'))
+
+        const user = await User.findOne({ email })
+        if (!user) return next(createError(404, 'User not found'))
+
+        const isCorrect = await bcrypt.compare(req.body.password, user.password)
+        if (!isCorrect) next(createError(400, 'Wrong Credentials'))
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+
+        const { password, ...others } = user._doc
+        // user'in bilgileri icinden password'u cikariyoruz
+
+        res.cookie('access_token', token, { // hash'lenmis token'i access_token olarak cookie'ye gonderiyoruz
+            httpOnly: true
+        }).status(200).json(others) // user'i gonderiyoruz
+    } catch (err) {
+        next(err)
+    }
+}
