@@ -1,10 +1,13 @@
 import express from "express";
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
 import colors from 'colors';
 
 import { connectDB } from "./config/db.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
+
+import authRoutes from './routes/authRoutes.js'
 
 dotenv.config();
 connectDB();
@@ -15,6 +18,8 @@ const port = process.env.PORT
 
 app.use(cookieParser())
 app.use(express.json())
+
+app.use('/api/auth', authRoutes)
 
 app.use(errorHandler);
 
