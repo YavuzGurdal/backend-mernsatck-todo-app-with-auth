@@ -11,25 +11,54 @@ import { createError } from '../error.js'
 // @access Public
 export const signup = asyncHandler(async (req, res, next) => {
     try {
-        const { name, email, password } = req.body
+        const { name, email } = req.body
 
-        if (!name || !email || !password) return next(createError(400, 'Please add all fields'))
+        if (!name || !email || !req.body.password) return next(createError(400, 'Please add all fields'))
 
         // Cheeck if user exists
         const userExists = await User.findOne({ email })
         if (userExists) return next(createError(400, 'User already exists'))
 
         const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(password, salt);
+        const hashedPassword = bcrypt.hashSync(req.body.password, salt);
         const newUser = new User({ name, email, password: hashedPassword })
         //const newUser = new User({ ...req.body, password: hashedPassword })
 
-        await newUser.save();
-        res.status(200).send('User has been created!')
+        const user = await newUser.save();
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+
+        const { password, ...others } = user._doc
+        // user'in bilgileri icinden password'u cikariyoruz
+
+        res.cookie('access_token', token, { // hash'lenmis token'i access_token olarak cookie'ye gonderiyoruz
+            httpOnly: true
+        }).status(200).json(others) // user'i gonderiyoruz
     } catch (err) {
         next(err)
     }
 })
+// export const signup = asyncHandler(async (req, res, next) => {
+//     try {
+//         const { name, email, password } = req.body
+
+//         if (!name || !email || !password) return next(createError(400, 'Please add all fields'))
+
+//         // Cheeck if user exists
+//         const userExists = await User.findOne({ email })
+//         if (userExists) return next(createError(400, 'User already exists'))
+
+//         const salt = bcrypt.genSaltSync(10);
+//         const hashedPassword = bcrypt.hashSync(password, salt);
+//         const newUser = new User({ name, email, password: hashedPassword })
+//         //const newUser = new User({ ...req.body, password: hashedPassword })
+
+//         await newUser.save();
+//         res.status(200).send('User has been created!')
+//     } catch (err) {
+//         next(err)
+//     }
+// })
 
 // @desc Authenticate a user
 // @route POST /api/auth/signin
