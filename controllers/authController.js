@@ -58,3 +58,16 @@ export const signin = async (req, res, next) => {
         next(err)
     }
 }
+
+// @desc Logout a user
+// @route POST /api/auth/logout
+// @access Public
+export const logout = async (req, res, next) => {
+    try {
+        res.clearCookie('access_token') // cookie'yi siliyorum
+
+        res.status(200).json('Successfully Logged Out')
+    } catch (err) {
+        next(err)
+    }
+}
