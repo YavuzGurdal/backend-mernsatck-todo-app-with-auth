@@ -8,6 +8,7 @@ import { connectDB } from "./config/db.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 
 import authRoutes from './routes/authRoutes.js'
+import todoRoutes from './routes/todoRoutes.js'
 
 dotenv.config();
 connectDB();
@@ -20,6 +21,7 @@ app.use(cookieParser())
 app.use(express.json())
 
 app.use('/api/auth', authRoutes)
+app.use('/api/todos', todoRoutes) // todoRoutes icindeki her route'a burdan gidiyor
 
 app.use(errorHandler);
 
