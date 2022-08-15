@@ -1,6 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "proxy": "https://react-todoapp-withauth.netlify.app",
   "description": "mernstack todo app with auth",
   "main": "index.js",
   "type": "module",
