@@ -29,11 +29,11 @@ app.use(cookieParser()) // frontend'den gelen cookie'leri okumami sagliyor
 app.use('/api/auth', authRoutes)
 app.use('/api/todos', todoRoutes) // todoRoutes icindeki her route'a burdan gidiyor
 
-app.use(express.static(path.join(__dirname, "/frontend/build")));
+// app.use(express.static(path.join(__dirname, "/frontend/build")));
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/frontend/build', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '/frontend/build', 'index.html'));
+// });
 
 app.use(errorHandler);
 
