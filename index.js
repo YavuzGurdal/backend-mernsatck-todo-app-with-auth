@@ -22,7 +22,7 @@ const app = express();
 app.use(cookieParser())
 app.use(express.json())
 
-app.use(cors({ credentials: true, origin: 'https://react-todoapp-withauth.netlify.app' })) // bunun sonunda / olmayacak
+app.use(cors({ credentials: false, origin: 'https://react-todoapp-withauth.netlify.app' })) // bunun sonunda / olmayacak
 
 app.use(cookieParser()) // frontend'den gelen cookie'leri okumami sagliyor
 
