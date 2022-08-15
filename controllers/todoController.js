@@ -24,6 +24,8 @@ export const addTodo = async (req, res, next) => {
 // @route PUT /api/todos/:id
 export const updateTodo = async (req, res, next) => {
     try {
+        if (!req.body.todo) return next(createError(400, 'Please add a Todo'))
+
         const todo = await Todo.findById(req.params.id)
         // req.params.id 'daki id router.put('/:id', verifyToken, updateTodo)'daki id'den geliyor
 
@@ -32,6 +34,9 @@ export const updateTodo = async (req, res, next) => {
             // req.user.id 'daki id authMiddleware icindeki verifyToken'daki jwt.verify icinden gonderilen req.user icinden geliyor
 
             const updatedTodo = await Todo.findByIdAndUpdate(
+                // req.params.id,
+                // { complete: req.body.complete }, // req.body icinde gelen herseyi set ediyoruz. yani update ediyoruz
+                // { new: true }
                 req.params.id,
                 { $set: req.body }, // req.body icinde gelen herseyi set ediyoruz. yani update ediyoruz
                 { new: true }
@@ -54,18 +59,18 @@ export const completeTodo = async (req, res, next) => {
 
         if (!todo) return next(createError(404, 'Todo not found!'))
 
-        const complete = !todo.complete
+        //const complete = !todo.complete
         if (req.user.id === todo.userId) {
             // req.user.id 'daki id authMiddleware icindeki verifyToken'daki jwt.verify icinden gonderilen req.user icinden geliyor
 
-            await Todo.findByIdAndUpdate(
+            const completedTodo = await Todo.findByIdAndUpdate(
                 req.params.id,
-                { complete },
+                { complete: !todo.complete },
                 { new: true }
             )
 
             //res.status(200).json('Todo updated')
-            res.status(200).json(complete)
+            res.status(200).json({ id: req.params.id, complete: completedTodo.complete })
         } else {
             return next(createError(404, 'You can Complete only your Todo!'))
         }
