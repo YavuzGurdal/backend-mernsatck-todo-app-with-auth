@@ -32,7 +32,9 @@ export const signup = asyncHandler(async (req, res, next) => {
         // user'in bilgileri icinden password'u cikariyoruz
 
         res.cookie('access_token', token, { // hash'lenmis token'i access_token olarak cookie'ye gonderiyoruz
-            httpOnly: true
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
         }).status(200).json(others) // user'i gonderiyoruz
     } catch (err) {
         next(err)
@@ -81,7 +83,9 @@ export const signin = async (req, res, next) => {
         // user'in bilgileri icinden password'u cikariyoruz
 
         res.cookie('access_token', token, { // hash'lenmis token'i access_token olarak cookie'ye gonderiyoruz
-            httpOnly: true
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
         }).status(200).json(others) // user'i gonderiyoruz
     } catch (err) {
         next(err)
