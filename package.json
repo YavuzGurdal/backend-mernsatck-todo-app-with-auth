@@ -2,14 +2,14 @@
   "name": "backend",
   "version": "1.0.0",
   "engines": {
-    "node": "18.7.0"
+    "node": "16.16.0"
   },
   "description": "mernstack todo app with auth",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "heroku-postbuild": "npm install --prefix frontend && npm run build --prefix frontend"
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
